@@ -1,15 +1,28 @@
 {
-    "name": "marcosnunesmbs/wpcreator",
+    "name": "app/wpcreator",
     "autoload": {
         "psr-4": {
-            "Marcosnunesmbs\\Wpcreator\\": "src/"
+            "App\\Wpcreator\\": "src/"
         }
     },
     "authors": [
         {
             "name": "Marcos Nunes",
             "email": "marcosnunesmbs@gmail.com"
+        },
+        {
+            "name": "Filipe Oliveira",
+            "email": "filipe444@gmail.com"
+        },
+        {
+            "name": "Lucas Juan",
+            "email": "lucasjuansomm@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "symfony/console": "^5.4"
+    },
+    "bin": [
+        "bin/wpcreator"
+    ]
 }
