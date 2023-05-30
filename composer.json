@@ -1,0 +1,15 @@
+{
+    "name": "marcosnunesmbs/wpcreator",
+    "autoload": {
+        "psr-4": {
+            "Marcosnunesmbs\\Wpcreator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Marcos Nunes",
+            "email": "marcosnunesmbs@gmail.com"
+        }
+    ],
+    "require": {}
+}
