@@ -11,12 +11,12 @@ require sprintf('%s/vendor/autoload.php', $root);
 
 use App\Wpcreator\Commands\CreateCpt;
 use App\Wpcreator\Commands\CreateWidget;
-use App\Wpcreator\Commands\test;
+use App\Wpcreator\Commands\Test;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 
-$application->add(new test());
+$application->add(new Test());
 $application->add(new CreateCpt());
 $application->add(new CreateWidget());
 
