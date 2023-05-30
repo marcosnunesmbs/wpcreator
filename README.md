@@ -34,7 +34,7 @@ supports | The list of supports separetade by spaces. See more arguments on [doc
 
 2. Execute the command __*createcpt*__ folowing the yaml path:
 
-```
+```php
 bin/wpcreator createcpt example.yaml
 ```
 
