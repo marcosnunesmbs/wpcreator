@@ -36,7 +36,7 @@ class CPT {
             $fileContents = str_replace('%MENU_NAME%', $data['labels']['menuName'] ?? ucfirst($name), $fileContents);
             $fileContents = str_replace('%SUPPORTS%', implode(", ", $supports) ?? implode(", ", array('')), $fileContents);
             $fileContents = str_replace('%SLUG%', $data['slug'] ?? strtolower($name), $fileContents);
-            $fileContents = str_replace('%SLUG%', $data['textdomain'] ?? 'textdomain', $fileContents);
+            $fileContents = str_replace('%TEXTDOMAIN%', $data['textdomain'] ?? 'textdomain', $fileContents);
 
             file_put_contents($targetFile, $fileContents);
 
