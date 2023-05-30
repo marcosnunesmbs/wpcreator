@@ -3,7 +3,7 @@ function wpcreator_%SINGULAR_NAME%_init() {
 	$labels = array(
 		'name'                  => _x( '%PLURAL_NAME%', 'Post type general name', 'textdomain' ),
 		'singular_name'         => _x( '%SINGULAR_NAME%', 'Post type singular name', 'textdomain' ),
-		'menu_name'             => _x( '%PLURAL_NAME%', 'Admin Menu text', 'textdomain' ),
+		'menu_name'             => _x( '%MENU_NAME%', 'Admin Menu text', 'textdomain' ),
 		'name_admin_bar'        => _x( '%SINGULAR_NAME%', 'Add New on Toolbar', 'textdomain' ),
 		'add_new'               => __( 'Add New', 'textdomain' ),
 		'add_new_item'          => __( 'Add New %SINGULAR_NAME%', 'textdomain' ),

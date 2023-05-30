@@ -31,10 +31,12 @@ class CPT {
             $fileContents = file_get_contents($targetFile);
 
             $fileContents = str_replace('%PLURAL_NAME%', $name, $fileContents);
-            $fileContents = str_replace('%SINGULAR_NAME%', $data['singular'] ?: ucfirst($name), $fileContents);
-            $fileContents = str_replace('%SINGULAR_NAME%', $data['plural'] ?: ucfirst($name), $fileContents);
-            $fileContents = str_replace('%SUPPORTS%', implode(", ", $supports) ?: implode(", ", array('')), $fileContents);
-            $fileContents = str_replace('%SLUG%', $data['slug'] ?: strtolower($name), $fileContents);
+            $fileContents = str_replace('%SINGULAR_NAME%', $data['labels']['singular'] ?? ucfirst($name), $fileContents);
+            $fileContents = str_replace('%SINGULAR_NAME%', $data['labels']['plural'] ?? ucfirst($name), $fileContents);
+            $fileContents = str_replace('%MENU_NAME%', $data['labels']['menuName'] ?? ucfirst($name), $fileContents);
+            $fileContents = str_replace('%SUPPORTS%', implode(", ", $supports) ?? implode(", ", array('')), $fileContents);
+            $fileContents = str_replace('%SLUG%', $data['slug'] ?? strtolower($name), $fileContents);
+            $fileContents = str_replace('%SLUG%', $data['textdomain'] ?? 'textdomain', $fileContents);
 
             file_put_contents($targetFile, $fileContents);
 
