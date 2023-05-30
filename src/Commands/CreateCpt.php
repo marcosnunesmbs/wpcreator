@@ -1,21 +1,22 @@
 <?php
 namespace App\Wpcreator\Commands;
 
+use App\Wpcreator\Services\CPT;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class test extends Command {
+class CreateCpt extends Command {
 
-    protected static $defaultName = 'test';
+    protected static $defaultName = 'createcpt';
 
-    protected static $defaultDescription = 'Testando CLI WpCreator';
+    protected static $defaultDescription = 'WpCreator CPT Create command';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln("Teste feito com sucesso");
+        CPT::createCpt();
+        $output->writeln("CPT feito com sucesso");
 
         return Command::SUCCESS;
     }
-
 }

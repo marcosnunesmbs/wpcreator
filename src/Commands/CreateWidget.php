@@ -1,21 +1,22 @@
 <?php
 namespace App\Wpcreator\Commands;
 
+use App\Wpcreator\Services\Widgets;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class test extends Command {
+class CreateWidget extends Command {
 
-    protected static $defaultName = 'test';
+    protected static $defaultName = 'cretewidget';
 
-    protected static $defaultDescription = 'Testando CLI WpCreator';
+    protected static $defaultDescription = 'WpCreator Elementor Widget Create command';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln("Teste feito com sucesso");
+        Widgets::createWidget();
+        $output->writeln("Widget feito com sucesso");
 
         return Command::SUCCESS;
     }
-
 }

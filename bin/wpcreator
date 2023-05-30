@@ -9,11 +9,15 @@ if (! is_file(sprintf('%s/vendor/autoload.php', $root))) {
 
 require sprintf('%s/vendor/autoload.php', $root);
 
+use App\Wpcreator\Commands\CreateCpt;
+use App\Wpcreator\Commands\CreateWidget;
 use App\Wpcreator\Commands\test;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 
 $application->add(new test());
+$application->add(new CreateCpt());
+$application->add(new CreateWidget());
 
 $application->run();
