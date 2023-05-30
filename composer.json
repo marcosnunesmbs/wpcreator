@@ -1,5 +1,8 @@
 {
-    "name": "app/wpcreator",
+    "name": "marcosnunesmbs/wpcreator",
+    "description": "A Wordpress CPT builder",
+    "type": "library",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "App\\Wpcreator\\": "src/"
