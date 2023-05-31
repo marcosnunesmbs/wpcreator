@@ -6,9 +6,16 @@ A simple php cli to create Wordpress Custom Post Types, Elementor's Widgets and 
 
 ## Getting Started
 
-...
+### Instal
+This CLI application is a Wordpress Custom Post Type Builder written in PHP and is installed using [Composer](https://getcomposer.org/):
 
-### Creating a Custom Post Type
+``` bash
+composer global require marcosnunesmbs/wpcreator
+```
+
+### Usage
+
+#### Creating a Custom Post Type
 
 1. Create a file *example.yaml* with basic informations:
 
@@ -35,7 +42,7 @@ supports | The list of supports separetade by spaces. See more arguments on [doc
 2. Execute the command __*create:cpt*__ folowing the yaml path:
 
 ```php
-bin/wpcreator create:cpt example.yaml
+wpcreator create:cpt example.yaml
 ```
 
 This command will create a folder named __*"output"*__ with the file __*Cars.php*__ which the basic Custom Post Type configuration customized.
