@@ -32,10 +32,10 @@ slug | The slug name of CPT
 supports | The list of supports separetade by spaces. See more arguments on [documentation](https://developer.wordpress.org/reference/functions/register_post_type/#supports).
 
 
-2. Execute the command __*createcpt*__ folowing the yaml path:
+2. Execute the command __*create:cpt*__ folowing the yaml path:
 
 ```php
-bin/wpcreator createcpt example.yaml
+bin/wpcreator create:cpt example.yaml
 ```
 
 This command will create a folder named __*"output"*__ with the file __*Cars.php*__ which the basic Custom Post Type configuration customized.

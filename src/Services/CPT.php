@@ -18,27 +18,31 @@ class CPT {
             $supports[$x] = "'{$support}'";
         }
 
-        $sourceFile = __DIR__ . '/Files/CPT/cpt_mockup.php';
-        $targetFolder = 'output';
-        $targetFileName = $name .'.php';
+        $baseFile = __DIR__ . '/Files/CPT/cpt_base.php';
+        $taxonomyFile = __DIR__ . '/Files/CPT/cpt_taxonomy.php';
 
-        if (!file_exists($targetFolder)) {
-            mkdir($targetFolder, 0777, true);
+        $outputFolder = 'output';
+        $outputFileName = $name .'.php';
+
+        if (!file_exists($outputFolder)) {
+            mkdir($outputFolder, 0777, true);
         }
-        $targetFile = $targetFolder . DIRECTORY_SEPARATOR . $targetFileName;
-        if (copy($sourceFile, $targetFile)) {
+        $outputFile = $outputFolder . DIRECTORY_SEPARATOR . $outputFileName;
+        if (copy($baseFile, $outputFile)) {
 
-            $fileContents = file_get_contents($targetFile);
+            $fileContents = file_get_contents($outputFile);
 
-            $fileContents = str_replace('%PLURAL_NAME%', $name, $fileContents);
-            $fileContents = str_replace('%SINGULAR_NAME%', $data['labels']['singular'] ?? ucfirst($name), $fileContents);
-            $fileContents = str_replace('%SINGULAR_NAME%', $data['labels']['plural'] ?? ucfirst($name), $fileContents);
-            $fileContents = str_replace('%MENU_NAME%', $data['labels']['menuName'] ?? ucfirst($name), $fileContents);
-            $fileContents = str_replace('%SUPPORTS%', implode(", ", $supports) ?? implode(", ", array('')), $fileContents);
-            $fileContents = str_replace('%SLUG%', $data['slug'] ?? strtolower($name), $fileContents);
-            $fileContents = str_replace('%TEXTDOMAIN%', $data['textdomain'] ?? 'textdomain', $fileContents);
+            $fileContents = str_replace('__PLURAL_NAME__', $name, $fileContents);
+            $fileContents = str_replace('__SINGULAR_NAME__', $data['labels']['singular'] ?? ucfirst($name), $fileContents);
+            $fileContents = str_replace('__SINGULAR_NAME__', $data['labels']['plural'] ?? ucfirst($name), $fileContents);
+            $fileContents = str_replace('__MENU_NAME__', $data['labels']['menuName'] ?? ucfirst($name), $fileContents);
+            $fileContents = str_replace('__SUPPORTS__', implode(", ", $supports) ?? implode(", ", array('')), $fileContents);
+            $fileContents = str_replace('__SLUG__', $data['slug'] ?? strtolower($name), $fileContents);
+            $fileContents = str_replace('__TEXTDOMAIN__', $data['textdomain'] ?? 'textdomain', $fileContents);
 
-            file_put_contents($targetFile, $fileContents);
+            $fileContents .= str_replace('<?php', PHP_EOL, file_get_contents($taxonomyFile));
+
+            file_put_contents($outputFile, $fileContents);
 
             echo "CPT {$name} criado." . PHP_EOL;
             return true;

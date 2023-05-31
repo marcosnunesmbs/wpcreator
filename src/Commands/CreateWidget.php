@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateWidget extends Command {
 
-    protected static $defaultName = 'cretewidget';
+    protected static $defaultName = 'crete:widget';
 
     protected static $defaultDescription = 'WpCreator Elementor Widget Create command';
 

@@ -9,18 +9,18 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class CreateCpt extends Command {
 
-    protected static $defaultName = 'createcpt';
+    protected static $defaultName = 'create:cpt';
 
     protected static $defaultDescription = 'WpCreator CPT Create command';
 
     protected function configure(): void
-{
-    $this->addArgument('yaml', InputArgument::REQUIRED, 'The path to yaml file.');
-}
+    {
+        $this->addArgument('yaml-path', InputArgument::REQUIRED, 'The path to yaml file.');
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if(CPT::createCpt($input->getArgument('yaml')))
+        if(CPT::createCpt($input->getArgument('yaml-path')))
         {
             return Command::SUCCESS;
         }
