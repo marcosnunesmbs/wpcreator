@@ -2,3 +2,5 @@
 composer.lock
 /output/
 /*.yaml
+/*.json
+!composer.json
