@@ -1,11 +1,15 @@
 <?php 
 namespace App\Wpcreator\Services;
 use Symfony\Component\Yaml\Yaml;
+use App\Wpcreator\Domain\Parser;
+use App\Wpcreator\Domain\Parser\ParserBuilder;
 
 class CPT {
-    public static function createCpt(string $yaml) : bool
+    public static function createCpt(string $file_path) : bool
     {
-        $data = Yaml::parseFile($yaml);
+        $parserBuilder = new ParserBuilder();
+        $parser = $parserBuilder->file($file_path)->build();
+        $data = $parser->parse();
         if (!isset($data['name'])) {
             echo "Falha ao criar CPT!" . PHP_EOL;
             echo "Nome não encontrado no arquivo yaml." . PHP_EOL;
