@@ -57,8 +57,6 @@ metaboxes:
         label: Aniversário
         type: date
 
-<details><summary>Parameters</summary>
-
 ```
 |Parameter | Description|
 | -------- | ---------- |
@@ -75,8 +73,6 @@ postmetas | Array of postmetas
 id | Postmeta id
 label | Postmeta label
 type | Type of postmeta input
-
-</details>
 
 2. Execute the command __*create:cpt*__ folowing the yaml path:
 
