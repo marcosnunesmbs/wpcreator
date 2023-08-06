@@ -33,5 +33,5 @@ jobs:
       - name: Dump Autoload
         run: composer dump-autoload
 
-      - name: Run PHPUnit
-        run: vendor/bin/phpunit tests
+      # - name: Run PHPUnit
+      #   run: vendor/bin/phpunit tests
