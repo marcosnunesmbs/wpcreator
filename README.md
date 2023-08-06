@@ -28,13 +28,35 @@ composer global require marcosnunesmbs/wpcreator
 1. Create a file *example.yaml* with basic informations:
 
 ``` yaml
-name: Cars
+name: Clientes
 labels:
-  plural: Cars
-  singular: Car
-  menuName: Cars
-slug: car
-supports: title editor authors thumbnail
+  plural: Clientes
+  singular: Cliente
+  menuName: Clientes
+slug: clientes
+supports: title thumbnail
+taxonomies:
+  - name: Categoria
+    singular: Categoria
+    plural: Categorias
+    slug: categoria
+    hierarchical: 'true'
+metaboxes:
+  - name: form_cliente
+    title: Formulário
+    postmetas:
+      - id: cpf_cliente
+        label: CPF
+        type: text
+      - id: telefone_cliente
+        label: Telefone
+        type: text
+  - name: birth_date
+    title: Aniversário
+    postmetas:
+      - id: birthdate_cliente
+        label: Aniversário
+        type: date
 
 ```
 |Parameter | Description|
@@ -45,7 +67,13 @@ singular | The singular name of CPT
 menuName | The Menu name of CPT
 slug | The slug name of CPT
 supports | The list of supports separetade by spaces. See more arguments on [documentation](https://developer.wordpress.org/reference/functions/register_post_type/#supports).
-
+taxonomies | array of taxonomies
+name | Taxonomy Name (Singular)
+title | Title of taxonomie
+postmetas | Array of postmetas
+id | Postemeta id
+label | Postmeta label
+type | Type of postmeta input
 
 2. Execute the command __*create:cpt*__ folowing the yaml path:
 
