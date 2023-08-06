@@ -2,7 +2,7 @@
 <p align="center">
     <!-- <img alt="Preview" src="/art/preview.png"> -->
 	<p align="center">
-		<a href="//packagist.org/packages/marcosnunesmbs/wpcreator"><img alt="Latest Stable Version" src="https://poser.pugx.org/marcosnunesmbs/wpcreator/v"></a>
+		<a href="//packagist.org/packages/marcosnunesmbs/wpcreator"><img alt="Latest Stable Version" src="https://img.shields.io/packagist/v/marcosnunesmbs/wpcreator.svg?style=flat-square"></a>
 		<a href="//packagist.org/packages/marcosnunesmbs/wpcreator"><img alt="License" src="https://poser.pugx.org/marcosnunesmbs/wpcreator/license"></a>
 	</p>
 </p>
