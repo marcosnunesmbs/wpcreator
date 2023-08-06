@@ -1,0 +1,29 @@
+name: Clientes
+labels:
+  plural: Clientes
+  singular: Cliente
+  menuName: Clientes
+slug: clientes
+supports: title thumbnail
+taxonomies:
+  - name: Categoria
+    singular: Categoria
+    plural: Categorias
+    slug: categoria
+    hierarchical: 'true'
+metaboxes:
+  - name: form_cliente
+    title: Formulário
+    postmetas:
+      - id: cpf_cliente
+        label: CPF
+        type: text
+      - id: telefone_cliente
+        label: Telefone
+        type: text
+  - name: birth_date
+    title: Aniversário
+    postmetas:
+      - id: birthdate_cliente
+        label: Aniversário
+        type: date

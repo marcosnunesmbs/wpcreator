@@ -4,6 +4,7 @@ namespace App\Wpcreator\Commands;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Test extends Command {
 
@@ -13,7 +14,9 @@ class Test extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln("Teste feito com sucesso");
+        $io = new SymfonyStyle($input, $output);
+
+        $io->success("Teste feito com sucesso");
 
         return Command::SUCCESS;
     }

@@ -13,7 +13,7 @@ A simple php cli to create Wordpress Custom Post Types, Elementor's Widgets and 
 
 ## Getting Started
 
-### Instal
+### Install
 This CLI application is a Wordpress Custom Post Type Builder written in PHP and is installed using [Composer](https://getcomposer.org/):
 
 ``` bash
@@ -32,7 +32,7 @@ labels:
   plural: Clientes
   singular: Cliente
   menuName: Clientes
-slug: clientes
+  slug: clientes
 supports: title thumbnail
 taxonomies:
   - name: Categoria

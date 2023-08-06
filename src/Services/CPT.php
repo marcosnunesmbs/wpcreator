@@ -14,13 +14,14 @@ class CPT {
     protected $metaboxRender = __DIR__ . '/Files/CPT/metaboxes/metabox_render.php';
     protected $metaboxPostmetas = __DIR__ . '/Files/CPT/metaboxes/metabox_postmetas.php';
     protected $inputs = __DIR__ . '/Files/CPT/metaboxes/inputs.php';
+    protected $postmetas = __DIR__ . '/Files/CPT/metaboxes/postmetas.php';
     protected $outputFile = null;
     protected $supports = [];
     protected $name = '';
 
     public function __construct(protected SymfonyStyle $io)
     {
-        
+
     }
 
     public function createCpt(string $file_path) : bool
@@ -72,10 +73,12 @@ class CPT {
             $this->registerMetaboxes($data);
             $this->addMetaBoxes($data);
             $this->renderMetaBoxes($data);
+            $this->createPostmetas($data);
 
             $this->io->text("Ok!");
         }
 
+        
         $this->io->success("CPT {$this->name} criado.");
         return true;
         
@@ -85,6 +88,7 @@ class CPT {
     {
         $parserBuilder = new ParserBuilder();
         $parser = $parserBuilder->file($file)->build();
+        
         return  $parser->parse();
     }
 
@@ -96,7 +100,7 @@ class CPT {
         if (!file_exists($outputFolder)) {
             mkdir($outputFolder, 0777, true);
         }
-
+        
         $this->outputFile = $outputFolder . DIRECTORY_SEPARATOR . $outputFileName;
     }
 
@@ -107,7 +111,7 @@ class CPT {
         foreach($supports as $x => $support) {
             $supports[$x] = "'{$support}'";
         }
-
+        
         $this->supports = $supports;
     }
 
@@ -125,6 +129,7 @@ class CPT {
             $fileContents = str_replace('__SLUG__', $data['slug'] ?? strtolower($this->name), $fileContents);
             $fileContents = str_replace('__TEXTDOMAIN__', $data['textdomain'] ?? 'textdomain', $fileContents);
             file_put_contents($this->outputFile, $fileContents);
+            
             return true;
         } else {
             return false;
@@ -140,8 +145,8 @@ class CPT {
         foreach($data['taxonomies'] as $taxonomy) {
             $contents = $fileContents;
             $this->io->text("Registrando {$taxonomy['name']}");
-            $contents = str_replace('__PLURAL_TAX__', $taxonomy['plural'], $contents);
             $contents = str_replace('__SINGULAR_TAX__', $taxonomy['singular'] ?? ucfirst($taxonomy['name']), $contents);
+            $contents = str_replace('__PLURAL_TAX__', $taxonomy['plural'], $contents);
             $contents = str_replace('__SLUG_TAX__', $taxonomy['slug'] ?? strtolower($taxonomy['name']), $contents);
             $contents = str_replace('__HIERARCHICAL__', $taxonomy['hierarchical'] ?? 'true', $contents);
             $contents = str_replace('__SLUG__', $data['slug'], $contents);
@@ -224,6 +229,30 @@ class CPT {
         $novoConteudo = str_replace('//render_metaboxes', $metaboxes, $outputFile);
 
         file_put_contents($this->outputFile, $novoConteudo);
+    }
+
+    private function createPostmetas($data): void
+    {
+        $postmetas = file_get_contents($this->postmetas);
+        $toSave = '//save_postmetas'. PHP_EOL;
+
+        $this->io->text("Criando Postmetas");
+
+        foreach($data['metaboxes'] as $metabox){
+            foreach($metabox['postmetas'] as $postmeta){
+                $addPostmeta = $postmetas;
+                $addPostmeta = str_replace("__ID__", $postmeta['id'], $addPostmeta);
+                $addPostmeta.=PHP_EOL;
+                $toSave.=$addPostmeta;
+            }
+        }
+
+        $outputFile = file_get_contents($this->outputFile);
+
+        $novoConteudo = str_replace('//save_postmetas', $toSave, $outputFile);
+
+        file_put_contents($this->outputFile, $novoConteudo);
+
     }
 
 }
