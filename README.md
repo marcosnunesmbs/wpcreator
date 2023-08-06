@@ -28,34 +28,34 @@ composer global require marcosnunesmbs/wpcreator
 1. Create a file *example.yaml* with basic informations:
 
 ``` yaml
-name: Clientes
+name: Cars
 labels:
-  plural: Clientes
-  singular: Cliente
-  menuName: Clientes
-  slug: clientes
+  plural: Cars
+  singular: Car
+  menuName: Cars
+  slug: cars
 supports: title thumbnail
 taxonomies:
-  - name: Categoria
-    singular: Categoria
-    plural: Categorias
-    slug: categoria
+  - name: Manufacturer
+    singular: Manufacturer
+    plural: Manufacturers
+    slug: manufacturer
     hierarchical: 'true'
 metaboxes:
-  - name: form_cliente
-    title: Formulário
+  - name: form_car
+    title: Form
     postmetas:
-      - id: cpf_cliente
-        label: CPF
+      - id: model_car
+        label: Model
         type: text
-      - id: telefone_cliente
-        label: Telefone
+      - id: old_car
+        label: Old
         type: text
-  - name: birth_date
-    title: Aniversário
+  - name: form2
+    title: Form 2
     postmetas:
-      - id: birthdate_cliente
-        label: Aniversário
+      - id: purchase_date
+        label: Purchase Date
         type: date
 
 ```
