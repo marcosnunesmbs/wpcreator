@@ -6,6 +6,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CreateCpt extends Command {
 
@@ -15,12 +16,16 @@ class CreateCpt extends Command {
 
     protected function configure(): void
     {
-        $this->addArgument('yaml-path', InputArgument::REQUIRED, 'The path to yaml file.');
+        $this->addArgument('path', InputArgument::REQUIRED, 'The path to yaml/json/xml file.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if(CPT::createCpt($input->getArgument('yaml-path')))
+        $io = new SymfonyStyle($input, $output);
+
+        $CPT = new CPT($io);
+
+        if($CPT->createCpt($input->getArgument('path')))
         {
             return Command::SUCCESS;
         }

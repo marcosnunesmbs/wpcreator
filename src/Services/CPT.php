@@ -3,57 +3,227 @@ namespace App\Wpcreator\Services;
 use Symfony\Component\Yaml\Yaml;
 use App\Wpcreator\Domain\Parser;
 use App\Wpcreator\Domain\Parser\ParserBuilder;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CPT {
-    public static function createCpt(string $file_path) : bool
+
+    protected $baseFile = __DIR__ . '/Files/CPT/cpt_base.php';
+    protected $taxonomyFile = __DIR__ . '/Files/CPT/cpt_taxonomy.php';
+    protected $metaboxFile = __DIR__ . '/Files/CPT/cpt_register_metabox.php';
+    protected $metaboxAdd = __DIR__ . '/Files/CPT/metaboxes/metabox_add.php';
+    protected $metaboxRender = __DIR__ . '/Files/CPT/metaboxes/metabox_render.php';
+    protected $metaboxPostmetas = __DIR__ . '/Files/CPT/metaboxes/metabox_postmetas.php';
+    protected $inputs = __DIR__ . '/Files/CPT/metaboxes/inputs.php';
+    protected $outputFile = null;
+    protected $supports = [];
+    protected $name = '';
+
+    public function __construct(protected SymfonyStyle $io)
     {
-        $parserBuilder = new ParserBuilder();
-        $parser = $parserBuilder->file($file_path)->build();
-        $data = $parser->parse();
+        
+    }
+
+    public function createCpt(string $file_path) : bool
+    {
+        $this->io->section("Parsing File");
+
+        $data = $this->parseFile($file_path);
+
         if (!isset($data['name'])) {
-            echo "Falha ao criar CPT!" . PHP_EOL;
-            echo "Nome não encontrado no arquivo yaml." . PHP_EOL;
+            $this->io->error("Falha ao criar CPT!"); 
+            $this->io->text("Nome não encontrado no arquivo yaml.");
             return false;
         }
-        $name = $data['name'];
-        $supports = explode(' ', $data['supports']);
 
-        foreach($supports as $x => $support) {
-            $supports[$x] = "'{$support}'";
+        $this->name = $data['name'];
+
+        $this->getSupports($data);
+
+        $this->io->text("Ok!");
+        $this->io->section("Creating File");
+
+        $this->createOutputFile($this->name);
+
+        $this->io->text("Ok!");
+        $this->io->section("Customazing Base Data");
+
+        if($this->exchangeBaseData()) {
+            $this->io->text("Ok!");
+
+            $this->io->section("Saving File");
+            $this->io->text("Ok!");
+
+        } else {
+            $this->io->error("Falha ao criar CPT.");
+            return false;
         }
 
-        $baseFile = __DIR__ . '/Files/CPT/cpt_base.php';
-        $taxonomyFile = __DIR__ . '/Files/CPT/cpt_taxonomy.php';
+        if($data['taxonomies'] && !empty($data['taxonomies'])){
+            $this->io->section("Registrando Taxonomias");
 
+            $this->registerTaxonomies($data);
+
+            $this->io->text("Ok!");
+        }
+
+        if($data['metaboxes'] && !empty($data['metaboxes'])){
+            $this->io->section("Registrando Metaboxes");
+
+            $this->registerMetaboxes($data);
+            $this->addMetaBoxes($data);
+            $this->renderMetaBoxes($data);
+
+            $this->io->text("Ok!");
+        }
+
+        $this->io->success("CPT {$this->name} criado.");
+        return true;
+        
+    }
+    
+    protected function parseFile($file): array
+    {
+        $parserBuilder = new ParserBuilder();
+        $parser = $parserBuilder->file($file)->build();
+        return  $parser->parse();
+    }
+
+    protected function createOutputFile($name): void
+    {
         $outputFolder = 'output';
         $outputFileName = $name .'.php';
 
         if (!file_exists($outputFolder)) {
             mkdir($outputFolder, 0777, true);
         }
-        $outputFile = $outputFolder . DIRECTORY_SEPARATOR . $outputFileName;
-        if (copy($baseFile, $outputFile)) {
 
-            $fileContents = file_get_contents($outputFile);
+        $this->outputFile = $outputFolder . DIRECTORY_SEPARATOR . $outputFileName;
+    }
 
-            $fileContents = str_replace('__PLURAL_NAME__', $name, $fileContents);
-            $fileContents = str_replace('__SINGULAR_NAME__', $data['labels']['singular'] ?? ucfirst($name), $fileContents);
-            $fileContents = str_replace('__SINGULAR_NAME__', $data['labels']['plural'] ?? ucfirst($name), $fileContents);
-            $fileContents = str_replace('__MENU_NAME__', $data['labels']['menuName'] ?? ucfirst($name), $fileContents);
-            $fileContents = str_replace('__SUPPORTS__', implode(", ", $supports) ?? implode(", ", array('')), $fileContents);
-            $fileContents = str_replace('__SLUG__', $data['slug'] ?? strtolower($name), $fileContents);
+    protected function getSupports($data): void
+    {
+        $supports = explode(' ', $data['supports']);
+
+        foreach($supports as $x => $support) {
+            $supports[$x] = "'{$support}'";
+        }
+
+        $this->supports = $supports;
+    }
+
+    protected function exchangeBaseData(): bool
+    {
+        if (copy($this->baseFile, $this->outputFile)) {
+
+            $fileContents = file_get_contents($this->outputFile);
+
+            $fileContents = str_replace('__PLURAL_NAME__', $this->name, $fileContents);
+            $fileContents = str_replace('__SINGULAR_NAME__', $data['labels']['singular'] ?? ucfirst($this->name), $fileContents);
+            $fileContents = str_replace('__SINGULAR_NAME__', $data['labels']['plural'] ?? ucfirst($this->name), $fileContents);
+            $fileContents = str_replace('__MENU_NAME__', $data['labels']['menuName'] ?? ucfirst($this->name), $fileContents);
+            $fileContents = str_replace('__SUPPORTS__', implode(", ", $this->supports) ?? implode(", ", array('')), $fileContents);
+            $fileContents = str_replace('__SLUG__', $data['slug'] ?? strtolower($this->name), $fileContents);
             $fileContents = str_replace('__TEXTDOMAIN__', $data['textdomain'] ?? 'textdomain', $fileContents);
-
-            $fileContents .= str_replace('<?php', PHP_EOL, file_get_contents($taxonomyFile));
-
-            file_put_contents($outputFile, $fileContents);
-
-            echo "CPT {$name} criado." . PHP_EOL;
+            file_put_contents($this->outputFile, $fileContents);
             return true;
         } else {
-            echo "Falha ao criar CPT." . PHP_EOL;
             return false;
         }
-        
     }
+
+    protected function registerTaxonomies($data): void
+    {
+        $fileContents = file_get_contents($this->taxonomyFile);
+
+        $taxonomies = '//register_taxonomies'. PHP_EOL;
+
+        foreach($data['taxonomies'] as $taxonomy) {
+            $contents = $fileContents;
+            $this->io->text("Registrando {$taxonomy['name']}");
+            $contents = str_replace('__PLURAL_TAX__', $taxonomy['plural'], $contents);
+            $contents = str_replace('__SINGULAR_TAX__', $taxonomy['singular'] ?? ucfirst($taxonomy['name']), $contents);
+            $contents = str_replace('__SLUG_TAX__', $taxonomy['slug'] ?? strtolower($taxonomy['name']), $contents);
+            $contents = str_replace('__HIERARCHICAL__', $taxonomy['hierarchical'] ?? 'true', $contents);
+            $contents = str_replace('__SLUG__', $data['slug'], $contents);
+            $taxonomies.=$contents . PHP_EOL . PHP_EOL;
+        }
+
+        $outputFile = file_get_contents($this->outputFile);
+
+        $novoConteudo = str_replace('//register_taxonomies', $taxonomies, $outputFile);
+
+        file_put_contents($this->outputFile, $novoConteudo);
+    }
+
+    protected function registerMetaboxes($data): void
+    {
+        $metaboxRegister = file_get_contents($this->metaboxFile);
+
+        $metaboxes = '//register_metaboxes'. PHP_EOL . $metaboxRegister;
+
+        $metaboxes = str_replace('__SINGULAR_NAME__', $data['labels']['singular'] ?? ucfirst($this->name), $metaboxes);
+
+        $outputFile = file_get_contents($this->outputFile);
+
+        $novoConteudo = str_replace('//register_metaboxes', $metaboxes, $outputFile);
+
+        file_put_contents($this->outputFile, $novoConteudo);
+    }
+
+    protected function addMetaBoxes($data): void
+    {
+        $addMetas = file_get_contents($this->metaboxAdd);
+
+        $metaboxes = '//add_meta_boxes'. PHP_EOL;
+
+        foreach($data['metaboxes'] as $metabox){
+            $this->io->text("Registrando {$metabox['title']}");
+            $contents = $addMetas;
+            $contents = str_replace('__NAME__', $metabox['name'], $contents);
+            $contents = str_replace('__TITLE__', $metabox['title'], $contents);
+            $contents = str_replace('__SLUG__', $data['slug'], $contents);
+
+            $metaboxes.=$contents . PHP_EOL . PHP_EOL;
+        }
+
+        $outputFile = file_get_contents($this->outputFile);
+
+        $novoConteudo = str_replace('//add_meta_boxes', $metaboxes, $outputFile);
+
+        file_put_contents($this->outputFile, $novoConteudo);
+    }
+
+    protected function renderMetaBoxes($data): void
+    {
+        $metaboxRender = file_get_contents($this->metaboxRender);
+        $inputs = file_get_contents($this->inputs);
+
+        $metaboxes = '//add_meta_boxes'. PHP_EOL;
+
+        foreach($data['metaboxes'] as $metabox){
+            $this->io->text("Renderizando {$metabox['title']}");
+            $contents = $metaboxRender;
+            $contents = str_replace('__NAME__', $metabox['name'], $contents);
+
+            $listInputs = '//inputs'. PHP_EOL;
+            foreach($metabox['postmetas'] as $input){
+                $addInput = $inputs;
+                $addInput = str_replace("__ID__", $input['id'], $addInput);
+                $addInput = str_replace("__LABEL__", $input['label'], $addInput);
+                $addInput = str_replace("__TYPE__", $input['type'], $addInput);
+                $addInput.=PHP_EOL;
+                $listInputs.=$addInput;
+            }
+            $contents = str_replace('//inputs', $listInputs, $contents);
+
+            $metaboxes.=$contents . PHP_EOL . PHP_EOL;
+        }
+
+        $outputFile = file_get_contents($this->outputFile);
+
+        $novoConteudo = str_replace('//render_metaboxes', $metaboxes, $outputFile);
+
+        file_put_contents($this->outputFile, $novoConteudo);
+    }
+
 }

@@ -4,7 +4,7 @@ use App\Wpcreator\Commands\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-require_once './vendor/autoload.php';
+require_once './src/Commands/Test.php';
 
 class TestTest extends TestCase
 {
