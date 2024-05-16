@@ -25,7 +25,7 @@ composer global require marcosnunesmbs/wpcreator
 
 #### Creating a Custom Post Type
 
-1. Create a file *example.yaml* with basic informations:
+1. Create a file *example.yaml* or *example.json* with basic informations:
 
 ``` yaml
 name: Cars
@@ -59,6 +59,60 @@ metaboxes:
         type: date
 
 ```
+
+``` json
+{
+    "name": "Cars",
+    "labels": {
+      "plural": "Cars",
+      "singular": "Car",
+      "menuName": "Cars"
+    },
+    "slug": "car",
+    "supports": "title thumbnail",
+    "taxonomies": [
+      {
+        "name": "Manufacturer",
+        "singular": "Manufacturer",
+        "plural": "Manufacturers",
+        "slug": "manufacturer",
+        "hierarchical": "true"
+      }
+    ],
+    "metaboxes": [
+      {
+        "name": "form_car",
+        "title": "Form",
+        "postmetas": [
+          {
+            "id": "model_car",
+            "label": "Model",
+            "type": "text"
+          },
+          {
+            "id": "old_car",
+            "label": "Old",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "name": "form2",
+        "title": "Form 2",
+        "postmetas": [
+          {
+            "id": "purchase_date",
+            "label": "Purchase Date",
+            "type": "date"
+          }
+        ]
+      }
+    ]
+  }
+  
+```
+[For more examples](/examples/)
+
 |Parameter | Description|
 | -------- | ---------- |
 name | The name of CPT and File
