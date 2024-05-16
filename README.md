@@ -1,4 +1,4 @@
-<h1 align="center">WpCreator</h1>
+<h1 align="center"><img src="./wpcreator.png" width="200"></h1>
 <p align="center">
     <!-- <img alt="Preview" src="/art/preview.png"> -->
 	<p align="center">
